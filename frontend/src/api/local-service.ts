@@ -40,15 +40,20 @@ export function runAction(key: string, id: number, action: string): ActionResult
     return { ok: false, message: `没有找到编号为 ${id} 的${meta.entity}` }
   }
   const current = String(rows[index].status)
+  if (current === '已闭环') {
+    return { ok: false, message: `${meta.entity}已闭环，闭环记录只可查看、不能再改动` }
+  }
   if (current === target) {
     return { ok: false, message: `${meta.entity}已经是「${target}」，不用重复操作` }
   }
+  // 已闭环为闭环终态：不挂待办、清除异常；其余沿用模块末态为完成态的旧约定。
+  const isTerminal = target === '已闭环'
   const lastStatus = meta.statuses[meta.statuses.length - 1]
   const updated: EntryRow = {
     ...rows[index],
     status: target,
-    pending: target !== lastStatus,
-    abnormal: NEGATIVE_ACTIONS.some((verb) => action.startsWith(verb)),
+    pending: isTerminal ? false : target !== lastStatus,
+    abnormal: isTerminal ? false : NEGATIVE_ACTIONS.some((verb) => action.startsWith(verb)),
   }
   const next = [...rows]
   next[index] = updated
