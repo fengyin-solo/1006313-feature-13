@@ -82,9 +82,9 @@ import {
 import type { EntryRow } from '@/data/types'
 
 const meta = moduleMeta('hazard')
-const columns = ["隐患编号", "隐患部位", "隐患等级", "整改措施", "责任人员", "发现日期", "整改期限", "整改状态"]
+const columns = ["隐患编号", "隐患部位", "隐患等级", "整改措施", "责任人员", "发现日期", "整改期限", "整改状态", "评估结论"]
 const actions = ["派发整改", "提交验收", "标记逾期"]
-const statuses = ["待整改", "整改中", "已验收", "已逾期"]
+const statuses = ["待整改", "整改中", "已验收", "已闭环", "已逾期"]
 const stats = [{"label": "待整改隐患", "value": 0}, {"label": "整改中隐患", "value": 0}, {"label": "已逾期隐患", "value": 0}]
 
 const rows = ref<EntryRow[]>([])
